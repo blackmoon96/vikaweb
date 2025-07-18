@@ -1,0 +1,19 @@
+name: Giữ cho Supabase hoạt động
+
+on:
+  schedule:
+    # Chạy tự động vào lúc 0h (UTC) mỗi 5 ngày.
+    - cron: '0 0 */5 * *'
+  workflow_dispatch: # Cho phép chạy thủ công từ tab Actions trên GitHub
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Gửi truy vấn đọc đến bảng 'site_settings'
+        run: |
+          # Lệnh này sẽ đọc 1 dòng từ bảng 'site_settings' của bạn.
+          curl --fail -X GET \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/site_settings?select=id&limit=1" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
